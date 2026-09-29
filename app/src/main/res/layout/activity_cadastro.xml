@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1F2033"
+    android:padding="18dp"
+    tools:context=".CadastroActivity">
+
+    <!-- BOTÃO VOLTAR -->
+    <ImageButton
+        android:id="@+id/btn_voltar"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:background="@drawable/bg_campo_login"
+        android:contentDescription="Voltar"
+        android:padding="10dp"
+        android:src="@drawable/ic_voltar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="#FFFFFF" />
+
+    <!-- TÍTULO -->
+    <TextView
+        android:id="@+id/txt_titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Criar Conta"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/btn_voltar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_voltar" />
+
+    <!-- SUBTÍTULO -->
+    <TextView
+        android:id="@+id/txt_subtitulo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="Preencha seus dados para se cadastrar"
+        android:textColor="#A9A9B5"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_voltar" />
+
+    <!-- NOME -->
+    <TextView
+        android:id="@+id/txt_nome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Nome Completo"
+        android:textColor="#FFFFFF"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_subtitulo" />
+
+    <EditText
+        android:id="@+id/edt_nome"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/bg_campo_login"
+        android:drawableStart="@drawable/ic_pessoa"
+        android:drawablePadding="12dp"
+        android:drawableTint="#E0E0E0"
+        android:hint="Ex.: João Silva"
+        android:inputType="textPersonName"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#A9A9B5"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_nome" />
+
+    <!-- TELEFONE -->
+    <TextView
+        android:id="@+id/txt_telefone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Telefone"
+        android:textColor="#FFFFFF"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edt_nome" />
+
+    <EditText
+        android:id="@+id/edt_telefone"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/bg_campo_login"
+        android:drawableStart="@drawable/ic_phone"
+        android:drawablePadding="12dp"
+        android:drawableTint="#E0E0E0"
+        android:hint="Ex.: (11) 99999-9999"
+        android:inputType="phone"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#A9A9B5"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_telefone" />
+
+    <!-- E-MAIL -->
+    <TextView
+        android:id="@+id/txt_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="E-mail"
+        android:textColor="#FFFFFF"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edt_telefone" />
+
+    <EditText
+        android:id="@+id/edt_email"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/bg_campo_login"
+        android:drawableStart="@drawable/ic_email"
+        android:drawablePadding="12dp"
+        android:drawableTint="#E0E0E0"
+        android:hint="Ex.: joao@email.com"
+        android:inputType="textEmailAddress"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#A9A9B5"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_email" />
+
+    <!-- SENHA -->
+    <TextView
+        android:id="@+id/txt_senha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Senha"
+        android:textColor="#FFFFFF"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edt_email" />
+
+    <EditText
+        android:id="@+id/edt_senha"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/bg_campo_login"
+        android:drawableStart="@drawable/ic_senha"
+        android:drawablePadding="12dp"
+        android:drawableTint="#E0E0E0"
+        android:hint="Mínimo 6 caracteres"
+        android:inputType="textPassword"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#A9A9B5"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_senha" />
+
+    <!-- CONFIRMAR SENHA -->
+    <TextView
+        android:id="@+id/txt_confirmar_senha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Confirmar Senha"
+        android:textColor="#FFFFFF"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edt_senha" />
+
+    <EditText
+        android:id="@+id/edt_confirmar_senha"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/bg_campo_login"
+        android:drawableStart="@drawable/ic_senha"
+        android:drawablePadding="12dp"
+        android:drawableTint="#E0E0E0"
+        android:hint="Repita a senha"
+        android:inputType="textPassword"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#A9A9B5"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_confirmar_senha" />
+
+    <!-- BOTÃO CADASTRAR -->
+
+    <!-- TEXTO INFERIOR -->
+    <Button
+        android:id="@+id/btn_cadastrar"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="92dp"
+        android:background="@drawable/ic_launcher_background"
+        android:text="Cadastrar"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edt_confirmar_senha" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/btn_cadastrar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/txt_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Já possui uma conta?"
+            android:textColor="#A9A9B5"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/txt_entrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Entrar"
+            android:textColor="#C9A84C"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
