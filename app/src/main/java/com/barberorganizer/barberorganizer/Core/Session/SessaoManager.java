@@ -10,14 +10,16 @@ public class SessaoManager {
     private static final String USUARIO_ID = "usuario_id";
     private static final String ACCESS_TOKEN = "access_token";
     private static final String REFRESH_TOKEN = "refresh_token";
+    private static final String PERFIL_USUARIO = "perfil_usuario";
 
     private final SharedPreferences preferences;
 
     public SessaoManager(Context context) {
-        preferences = context.getSharedPreferences(
-                NOME_PREFERENCIAS,
-                Context.MODE_PRIVATE
-        );
+        preferences = context.getApplicationContext()
+                .getSharedPreferences(
+                        NOME_PREFERENCIAS,
+                        Context.MODE_PRIVATE
+                );
     }
 
     public void salvarSessao(
@@ -29,7 +31,23 @@ public class SessaoManager {
                 .putString(ACCESS_TOKEN, accessToken)
                 .putString(REFRESH_TOKEN, refreshToken)
                 .putString(USUARIO_ID, usuarioId)
+                .remove(PERFIL_USUARIO)
                 .apply();
+    }
+
+    public void salvarPerfilUsuario(String perfil) {
+        preferences.edit()
+                .putString(
+                        PERFIL_USUARIO,
+                        perfil == null
+                                ? null
+                                : perfil.trim().toUpperCase()
+                )
+                .apply();
+    }
+
+    public String getPerfilUsuario() {
+        return preferences.getString(PERFIL_USUARIO, null);
     }
 
     public String getAccessToken() {
@@ -45,7 +63,9 @@ public class SessaoManager {
     }
 
     public boolean estaLogado() {
-        return getAccessToken() != null;
+        String token = getAccessToken();
+
+        return token != null && !token.trim().isEmpty();
     }
 
     public void limparSessao() {

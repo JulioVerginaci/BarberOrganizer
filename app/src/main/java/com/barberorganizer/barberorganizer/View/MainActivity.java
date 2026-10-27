@@ -12,13 +12,15 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.barberorganizer.R;
 import com.barberorganizer.barberorganizer.Controller.UsuarioController;
 import com.barberorganizer.barberorganizer.Model.Resultado;
-import com.barberorganizer.R;
 
 public class MainActivity extends BaseActivity {
 
-    private EditText edt_email, edt_senha;
+    private EditText edt_email;
+    private EditText edt_senha;
+
     private Button btn_logar;
     private TextView tv_cadastre_se;
 
@@ -29,121 +31,142 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         EdgeToEdge.enable(this);
-
         setContentView(R.layout.activity_main);
 
-        ViewCompat.setOnApplyWindowInsetsListener(
-                findViewById(R.id.main),
-                (v, insets) -> {
+        View raiz = findViewById(R.id.main);
 
-                    Insets systemBars =
-                            insets.getInsets(
-                                    WindowInsetsCompat.Type.systemBars()
-                            );
+        if (raiz != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(
+                    raiz,
+                    (v, insets) -> {
+                        Insets barras = insets.getInsets(
+                                WindowInsetsCompat.Type.systemBars()
+                        );
 
-                    v.setPadding(
-                            systemBars.left,
-                            systemBars.top,
-                            systemBars.right,
-                            systemBars.bottom
-                    );
+                        v.setPadding(
+                                barras.left,
+                                barras.top,
+                                barras.right,
+                                barras.bottom
+                        );
 
-                    return insets;
-                }
-        );
+                        return insets;
+                    }
+            );
+        }
 
-        // Inicializa o Controller
         usuarioController = new UsuarioController(this);
 
-        // Componentes da tela
         btn_logar = findViewById(R.id.btn_logar);
         edt_email = findViewById(R.id.edt_email);
         edt_senha = findViewById(R.id.edt_senha);
         tv_cadastre_se = findViewById(R.id.tv_cadastre_se);
 
-        // Botão de login
-        btn_logar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fazerLogin();
-            }
-        });
+        btn_logar.setOnClickListener(v -> fazerLogin());
 
-        // Link para cadastro
-        tv_cadastre_se.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        tv_cadastre_se.setOnClickListener(v -> {
+            Intent intent = new Intent(
+                    MainActivity.this,
+                    CadastroActivity.class
+            );
 
-                Intent intent = new Intent(
-                        MainActivity.this,
-                        CadastroActivity.class
-                );
-
-                startActivity(intent);
-            }
+            startActivity(intent);
         });
     }
 
     private void fazerLogin() {
+        String email = edt_email.getText().toString().trim();
+        String senha = edt_senha.getText().toString();
 
-        // Evita dois cliques enquanto a requisição está sendo processada
+        edt_email.setError(null);
+        edt_senha.setError(null);
+
         btn_logar.setEnabled(false);
 
         Resultado resultado = usuarioController.login(
-                edt_email.getText().toString(),
-                edt_senha.getText().toString(),
-
-                new TelaCallback<Void>() {
+                email,
+                senha,
+                new TelaCallback<String>() {
 
                     @Override
-                    public void onSucesso(Void dados) {
-
-                        mostrarMensagem(
-                                "Login realizado com sucesso!"
-                        );
-
-                        Intent intent = new Intent(
-                                MainActivity.this,
-                                ClienteActivity.class
-                        );
-
-                        startActivity(intent);
-
-                        // Impede voltar para o login
-                        finish();
+                    public void onSucesso(String perfil) {
+                        abrirTelaDoPerfil(perfil);
                     }
 
                     @Override
                     public void onErro(String mensagem) {
-
                         btn_logar.setEnabled(true);
-
                         super.onErro(mensagem);
+                    }
+
+                    @Override
+                    public void onSessaoExpirada() {
+                        btn_logar.setEnabled(true);
+                        super.onSessaoExpirada();
                     }
                 }
         );
 
-        // Erro de validação local
         if (!resultado.isSucesso()) {
-
             btn_logar.setEnabled(true);
 
             if (resultado.getCampo() == Resultado.Campo.EMAIL) {
-
-                edt_email.setError(
-                        resultado.getMensagem()
-                );
-
+                edt_email.setError(resultado.getMensagem());
                 edt_email.requestFocus();
 
             } else if (resultado.getCampo() == Resultado.Campo.SENHA) {
-
-                edt_senha.setError(
-                        resultado.getMensagem()
-                );
-
+                edt_senha.setError(resultado.getMensagem());
                 edt_senha.requestFocus();
+
+            } else {
+                mostrarMensagem(resultado.getMensagem());
             }
         }
+    }
+
+    private void abrirTelaDoPerfil(String perfilRecebido) {
+        String perfil = perfilRecebido == null
+                ? ""
+                : perfilRecebido.trim().toUpperCase();
+
+        Class<?> destino;
+
+        switch (perfil) {
+            case "CLIENTE":
+                destino = ClienteActivity.class;
+                break;
+
+            case "BARBEIRO":
+                destino = BarbeiroActivity.class;
+                break;
+
+            case "ADMIN":
+                destino = AdminActivity.class;
+                break;
+
+            default:
+                usuarioController.logout();
+
+                btn_logar.setEnabled(true);
+
+                mostrarMensagem(
+                        "O perfil da conta não foi reconhecido. "
+                                + "Verifique o cadastro no banco."
+                );
+                return;
+        }
+
+        Intent intent = new Intent(
+                MainActivity.this,
+                destino
+        );
+
+        intent.setFlags(
+                Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK
+        );
+
+        startActivity(intent);
+        finish();
     }
 }

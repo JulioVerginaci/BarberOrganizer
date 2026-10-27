@@ -16,15 +16,18 @@ public class UsuarioController {
 
     public UsuarioController(Context context) {
         usuarioService = new UsuarioService(context);
+
         sessaoManager = new SessaoManager(
                 context.getApplicationContext()
         );
     }
 
+    // O callback retorna o perfil confirmado:
+    // CLIENTE, BARBEIRO ou ADMIN.
     public Resultado login(
             String email,
             String senha,
-            ResultadoCallback<Void> callback
+            ResultadoCallback<String> callback
     ) {
         return usuarioService.login(
                 new LoginRequest(
@@ -35,8 +38,10 @@ public class UsuarioController {
         );
     }
 
+    // Cadastro público: sempre Cliente.
     public Resultado cadastrar(
             String nome,
+            String telefone,
             String email,
             String senha,
             ResultadoCallback<Boolean> callback
@@ -45,8 +50,28 @@ public class UsuarioController {
                 new CadastroRequest(
                         limpar(email),
                         senha,
-                        limpar(nome)
+                        limpar(nome),
+                        limpar(telefone)
                 ),
+                callback
+        );
+    }
+
+    // Cadastro exclusivo da área administrativa.
+    public Resultado cadastrarPeloAdministrador(
+            String nome,
+            String telefone,
+            String email,
+            String senha,
+            String perfil,
+            ResultadoCallback<Boolean> callback
+    ) {
+        return usuarioService.cadastrarPeloAdministrador(
+                limpar(nome),
+                limpar(telefone),
+                limpar(email),
+                senha,
+                perfil,
                 callback
         );
     }
@@ -57,6 +82,10 @@ public class UsuarioController {
 
     public String obterUsuarioId() {
         return sessaoManager.getUsuarioId();
+    }
+
+    public String obterPerfilAtual() {
+        return sessaoManager.getPerfilUsuario();
     }
 
     public void logout() {

@@ -31,8 +31,14 @@
             android:exported="false" />
 
         <activity
+            android:name="com.barberorganizer.barberorganizer.View.CadastroUsuarioAdminActivity"
+            android:exported="false" />
+
+        <activity
             android:name="com.barberorganizer.barberorganizer.View.MainActivity"
             android:exported="true">
+
+
 
             <intent-filter>
 

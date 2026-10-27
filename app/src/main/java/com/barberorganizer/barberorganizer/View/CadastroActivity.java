@@ -2,6 +2,7 @@ package com.barberorganizer.barberorganizer.View;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,10 +15,11 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.barberorganizer.R;
 import com.barberorganizer.barberorganizer.Controller.UsuarioController;
-import com.barberorganizer.barberorganizer.Core.Network.ResultadoCallback;
 import com.barberorganizer.barberorganizer.Model.Resultado;
 
 public class CadastroActivity extends BaseActivity {
+
+    private static final String TAG = "CadastroActivity";
 
     private TextView tv_entrar;
 
@@ -36,17 +38,14 @@ public class CadastroActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         EdgeToEdge.enable(this);
-
         setContentView(R.layout.activity_cadastro);
 
         ViewCompat.setOnApplyWindowInsetsListener(
                 findViewById(R.id.main),
                 (v, insets) -> {
-
-                    Insets systemBars =
-                            insets.getInsets(
-                                    WindowInsetsCompat.Type.systemBars()
-                            );
+                    Insets systemBars = insets.getInsets(
+                            WindowInsetsCompat.Type.systemBars()
+                    );
 
                     v.setPadding(
                             systemBars.left,
@@ -59,12 +58,11 @@ public class CadastroActivity extends BaseActivity {
                 }
         );
 
-        // Controller
+        // Inicializa o Controller.
         usuarioController = new UsuarioController(this);
 
-        // Componentes
+        // Inicializa os componentes da tela.
         tv_entrar = findViewById(R.id.txt_entrar);
-
         edt_nome = findViewById(R.id.edt_nome);
         edt_telefone = findViewById(R.id.edt_telefone);
         edt_email = findViewById(R.id.edt_email);
@@ -73,25 +71,19 @@ public class CadastroActivity extends BaseActivity {
 
         btn_cadastrar = findViewById(R.id.btn_cadastrar);
 
-        // Voltar para o login
+        // Link para retornar à tela de login.
         tv_entrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Intent intent = new Intent(
-                        CadastroActivity.this,
-                        MainActivity.class
-                );
-
-                startActivity(intent);
-                finish();
+                abrirTelaLogin();
             }
         });
 
-        // Botão cadastrar
+        // Evento do botão Cadastrar.
         btn_cadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG, "Botão Cadastrar clicado.");
                 realizarCadastro();
             }
         });
@@ -99,137 +91,161 @@ public class CadastroActivity extends BaseActivity {
 
     private void realizarCadastro() {
 
-        String nome =
-                edt_nome.getText().toString().trim();
+        String nome = edt_nome.getText().toString().trim();
 
-        String telefone =
-                edt_telefone.getText().toString().trim();
+        String telefone = edt_telefone.getText().toString().trim();
 
-        String email =
-                edt_email.getText().toString().trim();
+        String email = edt_email.getText().toString().trim();
 
-        String senha =
-                edt_senha.getText().toString();
+        String senha = edt_senha.getText().toString();
 
-        String confirmarSenha =
-                edt_confirmar_senha.getText().toString();
+        String confirmarSenha = edt_confirmar_senha.getText().toString();
 
-        // Validação do telefone
+        // Validação do telefone.
         if (telefone.isEmpty()) {
-
-            edt_telefone.setError(
-                    "Informe o telefone."
-            );
-
+            edt_telefone.setError("Informe o telefone.");
             edt_telefone.requestFocus();
             return;
         }
 
-        // Validação da confirmação da senha
+        // Validação da confirmação de senha.
         if (confirmarSenha.isEmpty()) {
-
-            edt_confirmar_senha.setError(
-                    "Confirme a senha."
-            );
-
+            edt_confirmar_senha.setError("Confirme a senha.");
             edt_confirmar_senha.requestFocus();
             return;
         }
 
+        // Verifica se as senhas são iguais.
         if (!senha.equals(confirmarSenha)) {
-
-            edt_confirmar_senha.setError(
-                    "As senhas não conferem."
-            );
-
+            edt_confirmar_senha.setError("As senhas não conferem.");
             edt_confirmar_senha.requestFocus();
             return;
         }
 
-        // Desabilita o botão durante a requisição
+        // Impede cliques duplicados durante a requisição.
         btn_cadastrar.setEnabled(false);
 
-        // Cadastro através do Controller
+        Log.d(
+                TAG,
+                "Validação local concluída. Enviando cadastro ao controller."
+        );
+
         Resultado resultado = usuarioController.cadastrar(
                 nome,
+                telefone,
                 email,
                 senha,
                 new TelaCallback<Boolean>() {
 
                     @Override
-                    public void onSucesso(Boolean jaLogado) {
+                    public void onSucesso(Boolean sucesso) {
+
+                        Log.d(
+                                TAG,
+                                "Callback de cadastro recebido. Sucesso: "
+                                        + sucesso
+                        );
 
                         btn_cadastrar.setEnabled(true);
 
-                        if (Boolean.TRUE.equals(jaLogado)) {
+                        if (Boolean.TRUE.equals(sucesso)) {
+
+                            // Limpa a sessão local para que o usuário
+                            // entre pela tela de login.
+                            usuarioController.logout();
 
                             mostrarMensagem(
-                                    "Conta criada com sucesso!"
+                                    "Cliente cadastrado com sucesso! "
+                                            + "Faça login para continuar."
                             );
 
-                            Intent intent = new Intent(
-                                    CadastroActivity.this,
-                                    ClienteActivity.class
-                            );
-
-                            startActivity(intent);
-                            finish();
+                            // Volta ao login e limpa o histórico
+                            // de navegação.
+                            abrirTelaLoginLimpandoHistorico();
 
                         } else {
 
                             mostrarMensagem(
-                                    "Conta criada! Confirme seu e-mail antes de entrar."
+                                    "Não foi possível concluir o cadastro."
                             );
-
-                            Intent intent = new Intent(
-                                    CadastroActivity.this,
-                                    MainActivity.class
-                            );
-
-                            startActivity(intent);
-                            finish();
                         }
                     }
 
                     @Override
                     public void onErro(String mensagem) {
 
+                        Log.e(TAG, "Falha no cadastro: " + mensagem);
+
                         btn_cadastrar.setEnabled(true);
 
+                        // Mostra a mensagem de erro padrão da BaseActivity.
                         super.onErro(mensagem);
                     }
                 }
         );
 
-        // Erro de validação retornado pelo Service
+        // Trata erros de validação retornados imediatamente pelo Service.
         if (!resultado.isSucesso()) {
 
             btn_cadastrar.setEnabled(true);
 
-            if (resultado.getCampo() == Resultado.Campo.NOME) {
-
-                edt_nome.setError(
-                        resultado.getMensagem()
-                );
-
-                edt_nome.requestFocus();
-
-            } else if (resultado.getCampo() == Resultado.Campo.EMAIL) {
-
-                edt_email.setError(
-                        resultado.getMensagem()
-                );
-
-                edt_email.requestFocus();
-
-            } else if (resultado.getCampo() == Resultado.Campo.SENHA) {
-
-                edt_senha.setError(
-                        resultado.getMensagem()
-                );
-
-                edt_senha.requestFocus();
-            }
+            exibirErroValidacao(resultado);
         }
+    }
+
+    private void exibirErroValidacao(Resultado resultado) {
+
+        String mensagem = resultado.getMensagem();
+
+        if (resultado.getCampo() == Resultado.Campo.NOME) {
+
+            edt_nome.setError(mensagem);
+            edt_nome.requestFocus();
+
+        } else if (resultado.getCampo() == Resultado.Campo.EMAIL) {
+
+            edt_email.setError(mensagem);
+            edt_email.requestFocus();
+
+        } else if (resultado.getCampo() == Resultado.Campo.SENHA) {
+
+            edt_senha.setError(mensagem);
+            edt_senha.requestFocus();
+
+        } else {
+
+            mostrarMensagem(
+                    mensagem != null
+                            ? mensagem
+                            : "Não foi possível validar o cadastro."
+            );
+        }
+    }
+
+    private void abrirTelaLogin() {
+
+        Intent intent = new Intent(
+                CadastroActivity.this,
+                MainActivity.class
+        );
+
+        startActivity(intent);
+        finish();
+    }
+
+    private void abrirTelaLoginLimpandoHistorico() {
+
+        Intent intent = new Intent(
+                CadastroActivity.this,
+                MainActivity.class
+        );
+
+        intent.setFlags(
+                Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK
+        );
+
+        startActivity(intent);
+        finish();
     }
 }

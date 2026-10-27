@@ -10,10 +10,15 @@ public class CadastroRequest {
     @SerializedName("data")
     private UserData data;
 
-    public CadastroRequest(String email, String password, String nome) {
+    public CadastroRequest(
+            String email,
+            String password,
+            String nome,
+            String telefone
+    ) {
         this.email = email;
         this.password = password;
-        this.data = new UserData(nome);
+        this.data = new UserData(nome, telefone);
     }
 
     public String getEmail() {
@@ -28,17 +33,29 @@ public class CadastroRequest {
         return data != null ? data.getName() : null;
     }
 
+    public String getTelefone() {
+        return data != null ? data.getPhone() : null;
+    }
+
     public static class UserData {
 
         @SerializedName("name")
         private String name;
 
-        public UserData(String name) {
+        @SerializedName("phone")
+        private String phone;
+
+        public UserData(String name, String phone) {
             this.name = name;
+            this.phone = phone;
         }
 
         public String getName() {
             return name;
+        }
+
+        public String getPhone() {
+            return phone;
         }
     }
 }
