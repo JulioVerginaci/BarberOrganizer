@@ -23,6 +23,10 @@
             android:exported="false" />
 
         <activity
+            android:name="com.barberorganizer.barberorganizer.View.ConfirmacaoAgendamentoActivity"
+            android:exported="false" />
+
+        <activity
             android:name="com.barberorganizer.barberorganizer.View.AdminActivity"
             android:exported="false" />
 

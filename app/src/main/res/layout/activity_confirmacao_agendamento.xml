@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollConfirmacao"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/bg_dark">
+
+    <LinearLayout
+        android:id="@+id/mainConfirmacao"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingStart="28dp"
+        android:paddingTop="24dp"
+        android:paddingEnd="28dp"
+        android:paddingBottom="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BARBER ORGANIZER"
+            android:textColor="@color/gold_accent"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <FrameLayout
+            android:layout_width="116dp"
+            android:layout_height="116dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/bg_success_circle">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="✓"
+                android:textColor="@color/text_white"
+                android:textSize="54sp" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34dp"
+            android:gravity="center"
+            android:text="Agendamento realizado\ncom sucesso!"
+            android:textColor="@color/text_white"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text="Seu horário foi reservado"
+            android:textColor="@color/text_gray"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:orientation="vertical"
+            android:padding="18dp"
+            android:background="@drawable/bg_card_accent_left">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="RESUMO DO AGENDAMENTO"
+                android:textColor="@color/gold_accent"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Barbeiro" android:textColor="@color/text_gray" android:textSize="14sp" />
+                <TextView android:id="@+id/txtBarbeiroConfirmacao" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/text_white" android:textSize="14sp" android:textStyle="bold" />
+            </LinearLayout>
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="14dp" android:layout_marginBottom="14dp" android:background="#41445C" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Serviço" android:textColor="@color/text_gray" android:textSize="14sp" />
+                <TextView android:id="@+id/txtServicoConfirmacao" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/text_white" android:textSize="14sp" android:textStyle="bold" />
+            </LinearLayout>
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="14dp" android:layout_marginBottom="14dp" android:background="#41445C" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Data" android:textColor="@color/text_gray" android:textSize="14sp" />
+                <TextView android:id="@+id/txtDataConfirmacao" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/text_white" android:textSize="14sp" android:textStyle="bold" />
+            </LinearLayout>
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="14dp" android:layout_marginBottom="14dp" android:background="#41445C" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Horário" android:textColor="@color/text_gray" android:textSize="14sp" />
+                <TextView android:id="@+id/txtHorarioConfirmacao" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/text_white" android:textSize="14sp" android:textStyle="bold" />
+            </LinearLayout>
+            <View android:id="@+id/divisorPreco" android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="14dp" android:layout_marginBottom="14dp" android:background="#41445C" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Valor" android:textColor="@color/text_gray" android:textSize="14sp" />
+                <TextView android:id="@+id/txtPrecoConfirmacao" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="@color/gold_accent" android:textSize="15sp" android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnVoltarHomeConfirmacao"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="22dp"
+            android:backgroundTint="@color/gold_accent"
+            android:text="Voltar para Home"
+            android:textAllCaps="false"
+            android:textColor="@color/bg_dark"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</ScrollView>

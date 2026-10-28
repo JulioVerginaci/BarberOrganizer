@@ -6,6 +6,9 @@ public class Usuario {
     private String email;
     private String telefone;
 
+    public Usuario() {
+    }
+
     public Usuario(String id, String nome, String email, String telefone) {
         this.id = id;
         this.nome = nome;
@@ -21,4 +24,6 @@ public class Usuario {
     public void setEmail(String email) { this.email = email; }
     public String getTelefone() { return telefone; }
     public void setTelefone(String telefone) { this.telefone = telefone; }
+
+    @Override public String toString() { return nome == null ? "Usuário" : nome; }
 }

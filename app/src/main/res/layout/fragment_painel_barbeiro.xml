@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark"
+    android:fillViewport="true"
+    android:clipToPadding="false">
+    <LinearLayout
+        android:id="@+id/conteudoPainelBarbeiro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingTop="18dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="24dp">
+        <TextView
+            android:id="@+id/tituloPainel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Painel do Barbeiro"
+            android:textColor="@color/text_white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginTop="0dp" />
+        <TextView
+            android:id="@+id/subtituloPainel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Resumo dos atendimentos de hoje"
+            android:textColor="@color/text_gray"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            android:layout_marginTop="3dp" />
+        <LinearLayout
+            android:id="@+id/resumoHoje"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@drawable/bg_card_accent_left">        <TextView
+            android:id="@+id/txtResumoHoje"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="AGENDA DE HOJE"
+            android:textColor="@color/gold_accent"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginTop="0dp" />        </LinearLayout>
+        <TextView
+            android:id="@+id/txtListaHoje"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Atendimentos de hoje"
+            android:textColor="@color/text_white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="5dp" />
+    </LinearLayout>
+</ScrollView>
