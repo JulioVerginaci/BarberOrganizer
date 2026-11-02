@@ -209,7 +209,7 @@ public class AgendamentoRepository {
         List<String> slots = new ArrayList<>();
         LocalTime fechamento = LocalTime.of(18, 0);
         for (int periodo = 0; periodo < 2; periodo++) {
-            LocalTime inicio = periodo == 0 ? LocalTime.of(9, 0) : LocalTime.of(14, 0);
+            LocalTime inicio = periodo == 0 ? LocalTime.of(8, 0) : LocalTime.of(13, 30);
             LocalTime ultimoInicio = periodo == 0 ? LocalTime.of(11, 0) : LocalTime.of(17, 30);
             LocalTime fimPeriodo = periodo == 0 ? LocalTime.of(12, 0) : fechamento;
             for (LocalTime hora = inicio; !hora.isAfter(ultimoInicio) && !hora.plusMinutes(Math.max(duracaoNova, 1)).isAfter(fimPeriodo); hora = hora.plusMinutes(30)) {
