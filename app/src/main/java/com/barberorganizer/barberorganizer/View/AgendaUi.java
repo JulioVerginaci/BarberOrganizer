@@ -1,3 +1,4 @@
+
 package com.barberorganizer.barberorganizer.View;
 
 import android.content.Context;
@@ -52,6 +53,14 @@ public final class AgendaUi {
         if (principal == null || principal.trim().isEmpty()) principal = mostrarCliente ? "Cliente" : "Barbeiro";
         card.addView(text(c, principal, 16, R.color.text_white, true));
         card.addView(text(c, (a.getServicos() == null || a.getServicos().isEmpty()) ? "Serviço não identificado" : a.getServicos(), 14, R.color.text_white, false));
+
+        if (mostrarCliente) {
+            String corte = a.getCorteFavoritoCliente();
+            card.addView(text(c, "Corte favorito: " +
+                            (corte == null ? "Carregando..." : corte),
+                    13, R.color.gold_accent, true));
+        }
+
         addGap(c, card, 5);
         card.addView(text(c, AgendamentoRepository.dataParaTela(a.getDataAgendamento()) + "  •  " + AgendamentoRepository.horaParaTela(a.getHorarioAgendamento()), 13, R.color.text_gray, false));
         addGap(c, card, 5);
@@ -68,7 +77,6 @@ public final class AgendaUi {
     }
     /** Aceita tanto R.color.* quanto uma cor ARGB já resolvida (por exemplo, 0xffffb300). */
     private static int resolveColor(Context c, int resourceOrColor) {
-        // IDs de recursos do app têm o byte superior 0x7f; cores literais normalmente 0xff.
         if (((resourceOrColor >>> 24) & 0xff) == 0x7f) {
             return androidx.core.content.ContextCompat.getColor(c, resourceOrColor);
         }
