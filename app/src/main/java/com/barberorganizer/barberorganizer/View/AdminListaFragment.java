@@ -25,11 +25,6 @@ import com.barberorganizer.barberorganizer.Model.Usuario;
 import com.barberorganizer.barberorganizer.Repository.AdminRepository;
 import java.util.List;
 
-/**
- * Listas do painel Admin.
- * Barbeiros e serviços: cadastro e exclusão (exclusão lógica, o histórico de agendamentos é mantido).
- * Clientes: somente leitura.
- */
 public class AdminListaFragment extends Fragment {
     private static final String ARG_TIPO = "tipo_admin";
     private static final int VERMELHO = 0xFFFF8585;
@@ -40,7 +35,11 @@ public class AdminListaFragment extends Fragment {
     private int branco, cinza, ouro;
 
     public static AdminListaFragment novaInstancia(String tipo) {
-        AdminListaFragment f = new AdminListaFragment(); Bundle b = new Bundle(); b.putString(ARG_TIPO,tipo); f.setArguments(b); return f;
+        AdminListaFragment f = new AdminListaFragment();
+        Bundle b = new Bundle();
+        b.putString(ARG_TIPO, tipo);
+        f.setArguments(b);
+        return f;
     }
 
     @Nullable @Override public View onCreateView(@NonNull android.view.LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
@@ -55,7 +54,7 @@ public class AdminListaFragment extends Fragment {
             final boolean ehServico = tipo.equals("servicos");
             TextView novo=botao(ehServico ? "+  Novo serviço" : "+  Novo barbeiro"); LinearLayout.LayoutParams bp=new LinearLayout.LayoutParams(-1,dp(46));bp.topMargin=dp(14);body.addView(novo,bp);
             novo.setOnClickListener(v -> {
-                if (ehServico) abrirFormServico();
+                if (ehServico) abrirFormServico(null);
                 else ((AdminActivity)requireActivity()).abrirCadastroBarbeiro();
             });
         }
@@ -94,7 +93,7 @@ public class AdminListaFragment extends Fragment {
         for(Servico s:dados){
             String nome=s.getNome()==null?"Serviço":s.getNome();
             String detalhe=String.format(java.util.Locale.forLanguageTag("pt-BR"),"R$ %.2f • %d min",s.getPreco(),s.getDuracao()).replace('.',',');
-            conteudo.addView(item(nome,detalhe,() -> pedirExclusaoServico(s)));
+            conteudo.addView(item(nome,detalhe,() -> abrirFormServico(s),() -> pedirExclusaoServico(s)));
         }
     }
 
@@ -106,16 +105,14 @@ public class AdminListaFragment extends Fragment {
             String nome=u.getNome()==null?"Usuário":u.getNome();
             String detalhe=u.getEmail()==null?"":u.getEmail();
             if(u.getTelefone()!=null&&!u.getTelefone().trim().isEmpty())detalhe += (detalhe.isEmpty()?"":"\n")+u.getTelefone();
-            if(podeExcluir) conteudo.addView(item(nome,detalhe,() -> pedirExclusaoBarbeiro(u)));
-            else conteudo.addView(item(nome,detalhe,null));
+            if(podeExcluir) conteudo.addView(item(nome,detalhe,null,() -> pedirExclusaoBarbeiro(u)));
+            else conteudo.addView(item(nome,detalhe,null,null));
         }
     }
 
     private void renderErro(String mensagem){if(!isAdded()||conteudo==null)return;conteudo.removeAllViews();conteudo.addView(texto(mensagem,13,VERMELHO,false));}
 
-    // =====================================================
-    // EXCLUSÃO (lógica: ativo = false)
-    // =====================================================
+    // EXCLUSÃO LÓGICA
 
     private void pedirExclusaoBarbeiro(Usuario u){
         String nome=u.getNome()==null?"este barbeiro":u.getNome();
@@ -140,9 +137,7 @@ public class AdminListaFragment extends Fragment {
 
     private void avisar(String mensagem){ Toast.makeText(requireContext(),mensagem,Toast.LENGTH_LONG).show(); }
 
-    // =====================================================
-    // DIÁLOGOS (visual próprio, no padrão escuro do app)
-    // =====================================================
+    // DIÁLOGOS
 
     private void confirmarExclusao(String titulo,String mensagem,Runnable aoConfirmar){
         LinearLayout box=caixaDialogo();
@@ -156,40 +151,61 @@ public class AdminListaFragment extends Fragment {
         excluir.setOnClickListener(v -> { dialogo.dismiss(); aoConfirmar.run(); });
     }
 
-    private void abrirFormServico(){
+    // Mesmo formulário para cadastrar e editar.
+    private void abrirFormServico(@Nullable Servico servico){
         LinearLayout box=caixaDialogo();
-        box.addView(texto("Novo serviço",17,branco,true));
+        box.addView(texto(servico==null ? "Novo serviço" : "Editar serviço",17,branco,true));
+
         EditText edtNome=campo("Nome do serviço",InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         EditText edtPreco=campo("Preço em R$ (ex.: 35,00)",InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
         EditText edtDuracao=campo("Duração em minutos (ex.: 30)",InputType.TYPE_CLASS_NUMBER);
+
+        if(servico!=null){
+            edtNome.setText(servico.getNome());
+            edtPreco.setText(String.format(java.util.Locale.getDefault(),"%.2f",servico.getPreco()));
+            edtDuracao.setText(String.valueOf(servico.getDuracao()));
+        }
+
         box.addView(edtNome,margemTopo(14));
         box.addView(edtPreco,margemTopo(10));
         box.addView(edtDuracao,margemTopo(10));
+
         TextView erro=texto("",12,VERMELHO,false); erro.setVisibility(View.GONE); box.addView(erro,margemTopo(10));
         TextView cancelar=botaoDialogo("Cancelar",CINZA_BOTAO,branco);
         TextView salvar=botaoDialogo("Salvar",ouro,0xFF1F2033);
         box.addView(linhaBotoes(cancelar,salvar),margemTopo(16));
+
         AlertDialog dialogo=abrirDialogo(box);
         cancelar.setOnClickListener(v -> dialogo.dismiss());
+
         salvar.setOnClickListener(v -> {
             String nome=edtNome.getText().toString().trim();
             double preco=lerPreco(edtPreco.getText().toString());
             int duracao=lerInteiro(edtDuracao.getText().toString());
+
             if(nome.isEmpty()){mostrarErro(erro,"Informe o nome do serviço.");edtNome.requestFocus();return;}
             if(!(preco>0)){mostrarErro(erro,"Informe um preço válido, maior que zero.");edtPreco.requestFocus();return;}
             if(duracao<=0){mostrarErro(erro,"Informe a duração em minutos, maior que zero.");edtDuracao.requestFocus();return;}
+
             double precoFinal=Math.round(preco*100)/100.0;
             salvar.setEnabled(false); erro.setVisibility(View.GONE);
-            repo().criarServico(nome,precoFinal,duracao,new AdminRepository.CallbackDados<Boolean>() {
+
+            AdminRepository.CallbackDados<Boolean> callback = new AdminRepository.CallbackDados<Boolean>() {
                 @Override public void sucesso(Boolean ok){
                     if(!isAdded())return;
-                    dialogo.dismiss(); avisar("Serviço cadastrado."); carregar();
+                    dialogo.dismiss();
+                    avisar(servico==null ? "Serviço cadastrado." : "Serviço atualizado.");
+                    carregar();
                 }
                 @Override public void erro(String m){
                     if(!isAdded())return;
-                    salvar.setEnabled(true); mostrarErro(erro,m);
+                    salvar.setEnabled(true);
+                    mostrarErro(erro,m);
                 }
-            });
+            };
+
+            if(servico==null) repo().criarServico(nome,precoFinal,duracao,callback);
+            else repo().editarServico(servico.getId(),nome,precoFinal,duracao,callback);
         });
     }
 
@@ -241,23 +257,34 @@ public class AdminListaFragment extends Fragment {
         LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,-2); p.topMargin=dp(topoDp); return p;
     }
 
-    // =====================================================
     // COMPONENTES VISUAIS
-    // =====================================================
 
-    /** Cartão da lista. Se aoExcluir não for nulo, mostra o botão "Excluir" à direita. */
-    private View item(String titulo,String sub,@Nullable Runnable aoExcluir){
+    private View item(String titulo,String sub,@Nullable Runnable aoEditar,@Nullable Runnable aoExcluir){
         LinearLayout card=caixa(requireContext().getColor(R.color.card_background));
         card.setOrientation(LinearLayout.HORIZONTAL); card.setGravity(Gravity.CENTER_VERTICAL);
         card.setPadding(dp(14),dp(13),dp(14),dp(13));
-        LinearLayout textos=new LinearLayout(requireContext()); textos.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout textos=new LinearLayout(requireContext());
+        textos.setOrientation(LinearLayout.VERTICAL);
         textos.addView(texto(titulo,15,branco,true));
+
         if(sub!=null&&!sub.isEmpty()){
             TextView b=texto(sub,12,cinza,false);
-            LinearLayout.LayoutParams pb=new LinearLayout.LayoutParams(-1,-2); pb.topMargin=dp(5);
+            LinearLayout.LayoutParams pb=new LinearLayout.LayoutParams(-1,-2);
+            pb.topMargin=dp(5);
             textos.addView(b,pb);
         }
+
         card.addView(textos,new LinearLayout.LayoutParams(0,-2,1));
+
+        if(aoEditar!=null){
+            TextView editar=texto("Editar",12,ouro,true);
+            editar.setPadding(dp(8),dp(8),dp(8),dp(8));
+            editar.setClickable(true); editar.setFocusable(true);
+            editar.setOnClickListener(v -> aoEditar.run());
+            card.addView(editar);
+        }
+
         if(aoExcluir!=null){
             TextView excluir=texto("Excluir",12,VERMELHO,true);
             excluir.setPadding(dp(12),dp(8),dp(4),dp(8));
@@ -265,7 +292,9 @@ public class AdminListaFragment extends Fragment {
             excluir.setOnClickListener(v -> aoExcluir.run());
             card.addView(excluir);
         }
-        LinearLayout.LayoutParams pc=new LinearLayout.LayoutParams(-1,-2); pc.bottomMargin=dp(9);
+
+        LinearLayout.LayoutParams pc=new LinearLayout.LayoutParams(-1,-2);
+        pc.bottomMargin=dp(9);
         card.setLayoutParams(pc);
         return card;
     }
