@@ -14,7 +14,7 @@ public final class HorarioFuncionamento {
     private static final LocalTime ABERTURA_MANHA = LocalTime.of(8, 0);
     private static final LocalTime FECHAMENTO_MANHA = LocalTime.of(12, 0);
     private static final LocalTime ABERTURA_TARDE = LocalTime.of(13, 30);
-    private static final LocalTime FECHAMENTO_TARDE = LocalTime.of(17, 30);
+    private static final LocalTime FECHAMENTO_TARDE = LocalTime.of(18, 0);
     private static final DateTimeFormatter FORMATO_HORA =
             DateTimeFormatter.ofPattern("HH:mm");
 
