@@ -271,10 +271,10 @@ public class AdminRepository {
 
         String detalhe = "";
 
-        try {
+        try (okhttp3.ResponseBody corpo = r.errorBody()) {
 
-            if (r.errorBody() != null) {
-                detalhe = r.errorBody().string();
+            if (corpo != null) {
+                detalhe = corpo.string();
             }
 
         } catch (IOException ignored) {
